@@ -1,0 +1,110 @@
+name: Build Packages
+
+on:
+  push:
+    branches:
+      - main
+      - master
+    tags:
+      - "v*"
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+env:
+  APP_NAME: awake-mouse
+
+jobs:
+  build:
+    name: Build ${{ matrix.os }}
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - os: ubuntu-latest
+            artifact_suffix: linux-x86_64
+            binary_name: awake-mouse
+            archive_ext: tar.gz
+          - os: windows-latest
+            artifact_suffix: windows-x86_64
+            binary_name: awake-mouse.exe
+            archive_ext: zip
+          - os: macos-latest
+            artifact_suffix: macos-aarch64
+            binary_name: awake-mouse
+            archive_ext: tar.gz
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install stable Rust
+        uses: dtolnay/rust-toolchain@stable
+
+      - name: Cache cargo
+        uses: Swatinem/rust-cache@v2
+
+      - name: Install Linux system dependencies
+        if: runner.os == 'Linux'
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y \
+            libasound2-dev \
+            libglib2.0-dev \
+            libgtk-3-dev \
+            libx11-dev \
+            libxcb-render0-dev \
+            libxcb-shape0-dev \
+            libxcb-xfixes0-dev \
+            libxkbcommon-dev \
+            libxtst-dev
+
+      - name: Build release binary
+        run: cargo build --release
+
+      - name: Prepare package directory
+        shell: bash
+        run: |
+          mkdir -p dist
+          cp README.md dist/README.md
+
+      - name: Copy platform binary
+        if: runner.os != 'Windows'
+        shell: bash
+        run: |
+          cp "target/release/${APP_NAME}" "dist/${APP_NAME}"
+          chmod +x "dist/${APP_NAME}"
+
+      - name: Copy Windows binary
+        if: runner.os == 'Windows'
+        shell: pwsh
+        run: |
+          Copy-Item "target/release/${env:APP_NAME}.exe" "dist/${env:APP_NAME}.exe"
+          Copy-Item "README.md" "dist/README.md" -Force
+
+      - name: Archive Unix package
+        if: runner.os != 'Windows'
+        shell: bash
+        run: |
+          tar -C dist -czf "${APP_NAME}-${{ matrix.artifact_suffix }}.${{ matrix.archive_ext }}" .
+
+      - name: Archive Windows package
+        if: runner.os == 'Windows'
+        shell: pwsh
+        run: |
+          Compress-Archive -Path dist/* -DestinationPath "${env:APP_NAME}-${{ matrix.artifact_suffix }}.${{ matrix.archive_ext }}"
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ env.APP_NAME }}-${{ matrix.artifact_suffix }}
+          path: ${{ env.APP_NAME }}-${{ matrix.artifact_suffix }}.${{ matrix.archive_ext }}
+
+      - name: Attach packages to GitHub Release
+        if: startsWith(github.ref, 'refs/tags/')
+        uses: softprops/action-gh-release@v2
+        with:
+          files: ${{ env.APP_NAME }}-${{ matrix.artifact_suffix }}.${{ matrix.archive_ext }}
