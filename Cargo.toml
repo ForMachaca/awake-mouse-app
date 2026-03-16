@@ -17,7 +17,6 @@ path = "src/main.rs"
 eframe = "0.31"
 
 [package.metadata.bundle]
-name = "awake-mouse"
 identifier = "io.github.formachaca.awake-mouse-app"
 short_description = "防止屏幕休眠并按随机轨迹移动鼠标的跨端 GUI 工具。"
 long_description = """
