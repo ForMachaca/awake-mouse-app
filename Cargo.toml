@@ -2,7 +2,35 @@
 name = "awake-mouse"
 version = "0.1.0"
 edition = "2021"
+description = "Cross-platform GUI app that prevents display sleep and moves the mouse using native system APIs."
+license = "MIT"
+readme = "README.md"
+repository = "https://github.com/ForMachaca/awake-mouse-app"
+homepage = "https://github.com/ForMachaca/awake-mouse-app"
+authors = ["ForMachaca"]
 
 [dependencies]
 eframe = "0.31"
 
+[package.metadata.bundle]
+name = "awake-mouse"
+identifier = "io.github.formachaca.awake-mouse-app"
+short_description = "防止屏幕休眠并按随机轨迹移动鼠标的跨端 GUI 工具。"
+long_description = """
+一个跨端 GUI 桌面应用，用于防止屏幕休眠，并按固定间隔通过系统原生 API
+发送带随机性的真实鼠标移动事件。
+"""
+category = "Utility"
+copyright = "Copyright (c) 2026 HAVEME"
+linux_use_terminal = false
+osx_minimum_system_version = "11.0"
+deb_depends = [
+  "libasound2",
+  "libgl1",
+  "libx11-6",
+  "libxcursor1",
+  "libxi6",
+  "libxkbcommon0",
+  "libxrandr2",
+  "libxtst6",
+]

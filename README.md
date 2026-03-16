@@ -1,5 +1,9 @@
 # 屏幕常醒
 
+[![CI](https://github.com/ForMachaca/awake-mouse-app/actions/workflows/build.yml/badge.svg)](https://github.com/ForMachaca/awake-mouse-app/actions/workflows/build.yml)
+[![Release Packages](https://github.com/ForMachaca/awake-mouse-app/actions/workflows/release.yml/badge.svg)](https://github.com/ForMachaca/awake-mouse-app/actions/workflows/release.yml)
+[![Latest Release](https://img.shields.io/github/v/release/ForMachaca/awake-mouse-app)](https://github.com/ForMachaca/awake-mouse-app/releases/latest)
+
 一个跨端 GUI 桌面应用，用于防止屏幕休眠，并按固定间隔通过系统原生 API 发送带随机性的真实鼠标移动事件。
 
 ## 功能
@@ -28,6 +32,28 @@
 ```bash
 cargo run
 ```
+
+## 下载
+
+- 稳定打包产物：从 [Releases](https://github.com/ForMachaca/awake-mouse-app/releases) 下载
+- 开发构建产物：从 [Actions](https://github.com/ForMachaca/awake-mouse-app/actions) 的最新成功工作流下载
+- Tag 发布时会自动生成这些平台包：
+  - macOS：`.app.tar.gz`
+  - Windows：`.msi`
+  - Linux：`.deb`
+
+## Tag 发布流程
+
+```bash
+git checkout main
+git pull
+git tag v0.1.0
+git push origin v0.1.0
+```
+
+- 推送 `v*` 标签后，`Release Packages` 工作流会自动构建 `.app / .msi / .deb`
+- 所有打包产物会自动上传到对应的 GitHub Release
+- 日常 `push` 和 `pull request` 只走 `CI` 工作流，用于编译检查和上传普通构建产物
 
 ## 使用提示
 
