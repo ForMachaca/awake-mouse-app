@@ -13,6 +13,7 @@ permissions:
 
 env:
   APP_NAME: awake-mouse
+  BIN_NAME: awake_mouse
 
 jobs:
   build:
@@ -76,14 +77,14 @@ jobs:
         if: runner.os != 'Windows'
         shell: bash
         run: |
-          cp "target/release/${APP_NAME}" "dist/${APP_NAME}"
+          cp "target/release/${BIN_NAME}" "dist/${APP_NAME}"
           chmod +x "dist/${APP_NAME}"
 
       - name: Copy Windows binary
         if: runner.os == 'Windows'
         shell: pwsh
         run: |
-          Copy-Item "target/release/${env:APP_NAME}.exe" "dist/${env:APP_NAME}.exe"
+          Copy-Item "target/release/${env:BIN_NAME}.exe" "dist/${env:APP_NAME}.exe"
           Copy-Item "README.md" "dist/README.md" -Force
 
       - name: Archive Unix package

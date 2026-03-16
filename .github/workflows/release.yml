@@ -11,6 +11,7 @@ permissions:
 
 env:
   APP_NAME: awake-mouse
+  BIN_NAME: awake_mouse
 
 jobs:
   bundle:
