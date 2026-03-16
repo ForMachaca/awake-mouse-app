@@ -21,6 +21,7 @@ struct PointRaw {
 }
 
 #[repr(C)]
+#[derive(Clone, Copy)]
 struct MouseInput {
     dx: i32,
     dy: i32,
