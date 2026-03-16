@@ -81,6 +81,7 @@ jobs:
         run: |
           New-Item -ItemType Directory -Force -Path release-assets | Out-Null
           Get-ChildItem "target/release/bundle/msi" -Filter *.msi | Copy-Item -Destination release-assets
+          Copy-Item "target/release/${env:BIN_NAME}.exe" "release-assets/${env:APP_NAME}.exe"
 
       - name: Collect macOS app bundle
         if: runner.os == 'macOS'

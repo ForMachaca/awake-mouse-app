@@ -39,8 +39,11 @@ cargo run
 - 开发构建产物：从 [Actions](https://github.com/ForMachaca/awake-mouse-app/actions) 的最新成功工作流下载
 - Tag 发布时会自动生成这些平台包：
   - macOS：`.app.tar.gz`
-  - Windows：`.msi`
+  - Windows：`.msi / .exe`
   - Linux：`.deb`
+- Windows 下载说明：
+  - `.msi`：标准安装包，适合常规安装与卸载
+  - `.exe`：免安装的裸可执行文件，可直接运行
 
 ## Tag 发布流程
 
@@ -51,7 +54,7 @@ git tag v0.1.0
 git push origin v0.1.0
 ```
 
-- 推送 `v*` 标签后，`Release Packages` 工作流会自动构建 `.app / .msi / .deb`
+- 推送 `v*` 标签后，`Release Packages` 工作流会自动构建 `.app / .msi / .exe / .deb`
 - 所有打包产物会自动上传到对应的 GitHub Release
 - 日常 `push` 和 `pull request` 只走 `CI` 工作流，用于编译检查和上传普通构建产物
 
